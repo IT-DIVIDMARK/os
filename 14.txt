@@ -1,0 +1,121 @@
+contact.dat :- 
+ 
+1,Kishore Gorade,1234567890,9876543210,Pune 
+2,Aditya Godase,2345678901,8765432109,Mumbai 
+3,Sharad shelke,3456789012,7654321098,Pune 
+ 
+Index.html :- 
+ 
+<html> 
+<head> 
+    <title>AJAX Contact Viewer</title> 
+    <style> 
+        table { 
+            border-collapse: collapse; 
+            width: 100%; 
+        } 
+        table, th, td { 
+            border: 1px solid black; 
+        } 
+        th, td { 
+            padding: 8px; 
+            text-align: left; 
+        } 
+        th { 
+            background-color: #f2f2f2; 
+        } 
+        .container { 
+            margin: 20px auto; 
+            width: 80%; 
+            text-align: center; 
+        } 
+    </style> 
+</head> 
+<body> 
+    <div class="container"> 
+        <h1>Contact Viewer</h1> 
+        <button id="printButton">Print Contacts</button> 
+        <div id="output"></div> 
+    </div> 
+    <script> 
+        document.getElementById("printButton").addEventListener("click", function() { 
+ 
+            const xhr = new XMLHttpRequest(); 
+ 
+            const file = "contact.dat"; 
+            xhr.open("GET", file, true); 
+ 
+            xhr.onload = function() { 
+                if (xhr.status === 200) { 
+                    const data = xhr.responseText; 
+                    const lines = data.split("\n"); 
+ 
+                    let table = "<table>"; 
+                    table += "<tr><th>Sr No</th><th>Name</th><th>Residence 
+Number</th><th>Mobile Number</th><th>Address</th></tr>"; 
+ 
+                    lines.forEach(line => { 
+                        if (line.trim() !== "") { 
+                            const fields = line.split(","); 
+                            table += `<tr> 
+                                <td>${fields[0]}</td> 
+                                <td>${fields[1]}</td> 
+                                <td>${fields[2]}</td> 
+                                <td>${fields[3]}</td> 
+                                <td>${fields[4]}</td> 
+                            </tr>`; 
+                        } 
+                    }); 
+ 
+                    table += "</table>"; 
+                    document.getElementById("output").innerHTML = table; 
+                } else { 
+                    document.getElementById("output").innerHTML = "Failed to load the 
+file."; 
+                } 
+            }; 
+ 
+ 
+            xhr.onerror = function() { 
+                document.getElementById("output").innerHTML = "Error fetching the file."; 
+            }; 
+ 
+ 
+            xhr.send(); 
+        }); 
+    </script> 
+</body> 
+</html>
+
+
+
+
+
+
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score, classification_report
+
+df = pd.read_csv("/iris.csv")
+
+print(df.groupby("species").describe())
+
+X = df.drop(columns=["species"])
+y = df["species"]
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+scaler = StandardScaler()
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)
+
+model = LogisticRegression(multi_class="ovr", solver="lbfgs")
+model.fit(X_train, y_train)
+
+y_pred = model.predict(X_test)
+
+accuracy = accuracy_score(y_test, y_pred)
+print(f"Model Accuracy: {accuracy * 100:.2f}%")
+print("\nClassification Report:\n", classification_report(y_test, y_pred))

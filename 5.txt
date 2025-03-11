@@ -1,0 +1,57 @@
+<html> 
+<head> 
+<title>Exam Preparation</title> 
+<script> 
+	function examPreparation() 
+	{ 
+		alert("Exams are near, have you started preparing for them?"); 
+		const startedPreparing = confirm("Have you started preparing for your exams?"); 
+		if (startedPreparing) 
+		{ 
+			const studyHours = prompt("Great! How many hours are you studying daily?"); 
+			if (studyHours && !isNaN(studyHours)) 
+			{ 
+				alert(Well done! Studying ${studyHours} hours daily is a good habit. Keep it up!); 
+			} 
+			else 
+			{ 
+				alert("Please make sure to plan your study hours. Stay focused!"); 
+			} 
+		} 
+		else 
+		{ 
+			alert("It's never too late to start preparing. Begin your studies today and good luck!"); 
+		} 
+	} 
+</script> 
+</head> 
+<body> 
+<h1>Exam Preparation Reminder</h1> 
+<button onclick="examPreparation()">Start Exam Preparation Check</button> 
+</body> 
+</html>
+
+
+
+
+
+import pandas as pd 
+from mlxtend.preprocessing import TransactionEncoder
+from mlxtend.frequent_patterns import apriori,association_rules
+dataset = [
+    ['Bread','Milk'],
+    ['Bread','Diaper','Beer','Coke'],
+    ['Bread','Milk','Diaper','Beer'],
+    ['Bread','Milk','Diaper','Coke']
+]
+te = TransactionEncoder()
+te_ary = te.fit(dataset).transform(dataset)
+df = pd.DataFrame(te_ary,columns=te.columns_)
+print("One -hot encoded DataFrame:")
+print(df)
+frequent_itemsets = apriori(df,min_support=0.6,use_colnames=True)
+print("n Frequent itemset with min_support=0.6:")
+print(frequent_itemset)
+rules = association_rules(frequent_itemsets,metric="confidence",min_threshold=0.7,num_itemsets=len(dataset))
+print("n association rules with min_confidence=0.7:")
+print(rules)

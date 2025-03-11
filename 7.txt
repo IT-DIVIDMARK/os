@@ -1,0 +1,72 @@
+<html> 
+<head> 
+<title>AJAX Name Validation</title> 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> 
+<style> 
+body { 
+font-family: Arial, sans-serif; 
+margin: 20px; 
+} 
+input { 
+padding: 8px; 
+margin-top: 10px; 
+width: 300px; 
+} 
+p { 
+margin-top: 10px; 
+font-size: 18px; 
+} 
+</style> 
+</head> 
+<body> 
+<h2>Type Your Name</h2> 
+<input type="text" id="nameInput" placeholder="Enter your name"> 
+<p id="responseMessage">Stranger, please tell me your name!</p> 
+<script> 
+$(document).ready(function () { 
+const knownNames = ["Rohit", "Virat", "Dhoni", "Ashwin", "Harbhajan"]; 
+$("#nameInput").on("keyup", function () { 
+const name = $(this).val().trim(); 
+setTimeout(() => { 
+if (name === "") { 
+$("#responseMessage").text("Stranger, please tell me your name!"); 
+} else if (knownNames.includes(name)) { 
+$("#responseMessage").text(Hello, master ${name}!); 
+} else { 
+$("#responseMessage").text(${name}, I don’t know you!); 
+} 
+}, 300); 
+}); 
+}); 
+</script> 
+</body> 
+</html>
+
+
+
+
+import pandas as pd
+from mlxtend.preprocessing import TransactionEncoder
+from mlxtend.frequent_patterns import apriori, association_rules
+
+df = pd.read_csv("Market_Basket_analysis.csv")
+print("n Dataset Information:")
+print(df.info())
+
+df.dropna(inplace=True)
+
+transactions = df.values.tolist()
+
+te = TransactionEncoder()
+te_ary = te.fit(transactions).transform(transactions)
+df_encoded = pd.DataFrame(te_ary, columns=te.columns_)
+
+frequent_itemsets = apriori(df_encoded, min_support=0.2, use_colnames=True)
+
+rules = association_rules(frequent_itemsets, metric="lift", min_threshold=1.0)
+
+print("\nFrequent Itemsets:")
+print(frequent_itemsets)
+
+print("\nAssociation Rules:")
+print(rules[['antecedents', 'consequents', 'support', 'confidence', 'lift']])

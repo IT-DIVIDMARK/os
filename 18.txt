@@ -1,0 +1,105 @@
+<html> 
+<head> 
+<title>Membership Form Validation</title> 
+<style> 
+.error { 
+color: red; 
+} 
+</style> 
+<script> 
+function validateForm(event) { 
+event.preventDefault(); 
+const username = document.getElementById("username").value.trim(); 
+const password = document.getElementById("password").value.trim(); 
+let isValid = true;  
+const usernameError = document.getElementById("usernameError"); 
+const passwordError = document.getElementById("passwordError");  
+usernameError.textContent = ""; 
+passwordError.textContent = ""; 
+if (username === "") { 
+usernameError.textContent = "Username is required."; 
+isValid = false; 
+} else if (username.length < 4 || username.length > 12) { 
+usernameError.textContent = "Username must be between 4 and 12 characters."; 
+isValid = false; 
+}  
+if (password === "") { 
+passwordError.textContent = "Password is required."; 
+isValid = false; 
+} else if (password.length < 6) { 
+passwordError.textContent = "Password must be at least 6 characters long."; 
+isValid = false; 
+} else if (!/[A-Z]/.test(password)) { 
+passwordError.textContent = "Password must include at least one uppercase letter."; 
+isValid = false; 
+} else if (!/[a-z]/.test(password)) { 
+passwordError.textContent = "Password must include at least one lowercase letter."; 
+isValid = false; 
+} else if (!/[0-9]/.test(password)) { 
+passwordError.textContent = "Password must include at least one number."; 
+isValid = false; 
+}  
+if (isValid) { 
+alert("Form submitted successfully!"); 
+document.getElementById("membershipForm").submit(); 
+} 
+} 
+</script> 
+</head> 
+<body> 
+<h1>Membership Form</h1> 
+<form id="membershipForm" onsubmit="validateForm(event)"> 
+<label for="username">Username:</label><br> 
+<input type="text" id="username" name="username"><br> 
+<span id="usernameError" class="error"></span><br>a 
+<label for="password">Password:</label><br> 
+<input type="password" id="password" name="password"><br> 
+<span id="passwordError" class="error"></span><br> 
+<button type="submit">Submit</button> 
+</form> 
+</body> 
+</html>
+
+
+
+
+
+
+import pandas as pd 
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score, confusion_matrix
+
+np.random.seed(42)
+
+data = {
+
+    'User ID':np.arange(1,501),
+    'Gender':np.random.choice(['Male','Female'],500),
+    'Age':np.random.randint(18,60,500),
+    'EstimatedSalary':np.random.randint(15000,150000,500),
+    'Purchased':np.random.choice([0,1],500)
+    
+}
+
+df = pd.DataFrame(data)
+
+df['Gender'] = df['Gender'].map({'Male':0,'Female':1})
+
+X=df[['Gender','Age','EstimatedSalary']]
+y = df['Purchased']
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3,
+random_state=42)
+
+model = LogisticRegression()
+model.fit(X_train,y_train)
+
+y_pred = model.predict(X_test)
+
+accuracy = accuracy_score(y_test,y_pred)
+conf_matrix = confusion_matrix(y_test,y_pred)
+
+print(f"Accuracy:{accuracy}")
+print(f"Confusion Matrix:n{conf_matrix}")

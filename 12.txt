@@ -1,0 +1,149 @@
+
+teachers.json :- 
+[ 
+] 
+{ "tno": 1, "tname": "Raj Kulkarni", "qualification": "PhD", "salary": 50000 }, 
+{ "tno": 2, "tname": "Kumar Deshmukh", "qualification": "MSc", "salary": 40000 }, 
+{ "tno": 3, "tname": "Ram Sawant", "qualification": "BEd", "salary": 35000 } 
+teach.html:- 
+<!DOCTYPE html> 
+<html lang="en"> 
+<head> 
+<meta charset="UTF-8"> 
+<meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+<title>Teacher Details</title> 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> 
+<style> 
+body { 
+font-family: Arial, sans-serif; 
+margin: 20px; 
+} 
+select, button { 
+padding: 10px; 
+margin: 10px 0; 
+} 
+table { 
+width: 50%; 
+border-collapse: collapse; 
+margin-top: 20px; 
+} 
+th, td { 
+border: 1px solid #ddd; 
+padding: 10px; 
+text-align: left; 
+} 
+th { 
+background-color: #f4f4f4; 
+} 
+    </style> 
+</head> 
+<body> 
+    <h2>Select a Teacher to View Details</h2> 
+    <select id="teacherSelect"> 
+        <option value="">-- Select Teacher --</option> 
+         
+    </select> 
+    <button id="fetchDetails">Get Details</button> 
+ 
+    <h3>Teacher Details</h3> 
+    <table id="teacherDetails" style="display:none;"> 
+        <tr> 
+            <th>Teacher No</th> 
+            <td id="tno"></td> 
+        </tr> 
+        <tr> 
+            <th>Teacher Name</th> 
+            <td id="tname"></td> 
+        </tr> 
+        <tr> 
+            <th>Qualification</th> 
+            <td id="qualification"></td> 
+        </tr> 
+        <tr> 
+            <th>Salary</th> 
+            <td id="salary"></td> 
+        </tr> 
+    </table> 
+ 
+    <script> 
+        $(document).ready(function () { 
+             
+            $.getJSON("teachers.json", function (data) { 
+                 
+                data.forEach(function (teacher) { 
+                    $("#teacherSelect").append( 
+                        <option value="${teacher.tno}">${teacher.tname}</option> 
+                    ); 
+                }); 
+ 
+                 
+                $("#fetchDetails").click(function () { 
+                    const tno = $("#teacherSelect").val(); 
+                    if (!tno) { 
+                        alert("Please select a teacher."); 
+                        return; 
+                    } 
+ 
+                 
+const selectedTeacher = data.find(teacher => teacher.tno == tno); 
+if (selectedTeacher) { 
+$("#tno").text(selectedTeacher.tno); 
+$("#tname").text(selectedTeacher.tname); 
+$("#qualification").text(selectedTeacher.qualification); 
+$("#salary").text(selectedTeacher.salary); 
+$("#teacherDetails").show(); 
+} 
+}); 
+}).fail(function () { 
+alert("Failed to load teacher data."); 
+}); 
+}); 
+</script> 
+</body> 
+</html>
+
+
+
+
+
+
+
+
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error, r2_score
+
+np.random.seed(42)
+
+data = {
+
+    'ID':np.arange(1,501),
+    'TV':np.random.randint(10,100,500),
+    'Radio':np.random.randint(5,50,500),
+    'NewsPaper':np.random.randint(1,20,500),
+    'Sales':np.random.randint(50,200,500)
+}
+df=pd.DataFrame(data)
+
+X = df[['TV','Radio','NewsPaper']]
+y = df['Sales']
+
+X_train,X_test,y_train,y_test = train_test_split(X,y,test_size=0.3,random_state=42)
+
+print(f"X_train shape : {X_train.shape}")
+print(f"X_test shape: {X_test.shape}")
+print(f"y_train shape: {y_train.shape}")
+print(f"y_test shape: {y_test.shape}")
+
+model = LinearRegression()
+
+model.fit(X_train,y_train)
+y_pred = model.predict(X_test)
+
+mse = mean_squared_error(y_test,y_pred)
+r2 = r2_score(y_test,y_pred)
+
+print(f"Mean Squared Error:{mse}")
+print(f"R-squared:{r2}")

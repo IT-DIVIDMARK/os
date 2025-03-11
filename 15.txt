@@ -1,0 +1,85 @@
+<html> 
+<head> 
+<title>AJAX Name Validation</title> 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> 
+<style> 
+body { 
+font-family: Arial, sans-serif; 
+margin: 20px; 
+} 
+input { 
+padding: 8px; 
+margin-top: 10px; 
+width: 300px; 
+} 
+p { 
+margin-top: 10px; 
+font-size: 18px; 
+} 
+</style> 
+</head> 
+<body> 
+<h2>Type Your Name</h2> 
+<input type="text" id="nameInput" placeholder="Enter your name"> 
+<p id="responseMessage">Stranger, please tell me your name!</p> 
+<script> 
+$(document).ready(function () { 
+const knownNames = ["Rohit", "Virat", "Dhoni", "Ashwin", "Harbhajan"]; 
+$("#nameInput").on("keyup", function () { 
+const name = $(this).val().trim(); 
+setTimeout(() => { 
+if (name === "") { 
+$("#responseMessage").text("Stranger, please tell me your name!"); 
+} else if (knownNames.includes(name)) { 
+$("#responseMessage").text(Hello, master ${name}!); 
+} else { 
+$("#responseMessage").text(${name}, I don’t know you!); 
+} 
+}, 300); 
+}); 
+}); 
+</script> 
+</body> 
+</html>
+
+
+
+
+
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error, r2_score
+
+np.random.seed(42)
+
+data = {
+
+    'ID':np.arange(1,501),
+    'flat': np.random.randint(10,100,500),
+    'houses':np.random.randint(5,50,500),
+    'purchases':np.random.randint(50,200,500)
+}
+df =pd.DataFrame(data)
+
+X = df[['flat','houses']]
+y=df['purchases']
+
+X_train,X_test,y_train,y_test = train_test_split(X,y,test_size=0.3,random_state=42)
+
+print(f"X_train shape:{X_train.shape}")
+print(f"X_test shape:{X_test.shape}")
+print(f"y_train shape:{y_train.shape}")
+print(f"y_test shape:{y_test.shape}")
+
+model = LinearRegression()
+model.fit(X_train,y_train)
+
+y_pred = model.predict(X_test)
+
+mse = mean_squared_error(y_test,y_pred)
+r2 = r2_score(y_test,y_pred)
+
+print(f"Mean Squared error:{mse}")
+print(f"R-squared:{r2}")
