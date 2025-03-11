@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<library>
+    <book category="Fiction">
+        <title>The Great Gatsby</title>
+        <author>F. Scott Fitzgerald</author>
+        <publisher>Scribner</publisher>
+        <price>10.99</price>
+    </book>
+    <book category="Science">
+        <title>A Brief History of Time</title>
+        <author>Stephen Hawking</author>
+        <publisher>Bantam Books</publisher>
+        <price>15.99</price>
+    </book>
+    <book category="Fantasy">
+        <title>Harry Potter and the Sorcerer's Stone</title>
+        <author>J.K. Rowling</author>
+        <publisher>Bloomsbury</publisher>
+        <price>12.99</price>
+    </book>
+</library>
+
+
+<!-- <?xml version="1.0" encoding="UTF-8"?>
+<library>
+    <book category="Fiction">
+        <title>The Great Gatsby</title>
+        <author>F. Scott Fitzgerald</author>
+        <publisher>Scribner</publisher>
+        <price>10.99</price>
+    </book>
+    <book category="Science">
+        <title>A Brief History of Time</title>
+        <author>Stephen Hawking</author>
+        <publisher>Bantam Books</publisher>
+        <price>15.99</price>
+    </book>
+    <book category="Fantasy">
+        <title>Harry Potter and the Sorcerer's Stone</title>
+        <author>J.K. Rowling</author>
+        <publisher>Bloomsbury</publisher>
+        <price>12.99</price>
+    </book>
+</library> -->
