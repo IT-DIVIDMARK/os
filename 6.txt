@@ -1,0 +1,60 @@
+import java.util.*;
+
+class HashMapDemo {
+    public static void main(String args[]) {
+        HashMap<Integer, String> ha = new HashMap<>();
+        ha.put(10, "Java");
+        ha.put(20, "Operating System");
+        ha.put(30, "Software Testing Tools");
+        ha.put(40, "Compiler Construction");
+        ha.put(50, "Web Technologies");
+
+        System.out.println("Before Sorting:");
+        Set<Map.Entry<Integer, String>> set = ha.entrySet();
+        Iterator<Map.Entry<Integer, String>> it = set.iterator();
+
+        while (it.hasNext()) {
+            Map.Entry<Integer, String> me = it.next();
+            System.out.print(me.getKey() + ": ");
+            System.out.println(me.getValue());
+        }
+
+        Map<Integer, String> map = new TreeMap<>(ha);
+        System.out.println("After Sorting:");
+        Set<Map.Entry<Integer, String>> set1 = map.entrySet();
+        Iterator<Map.Entry<Integer, String>> it2 = set1.iterator();
+
+        while (it2.hasNext()) {
+            Map.Entry<Integer, String> me2 = it2.next();
+            System.out.print(me2.getKey() + ": ");
+            System.out.println(me2.getValue());
+        }
+    }
+}
+
+
+package com.example.dateapp;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+@SpringBootApplication
+@RestController
+public class DateApplication 
+{
+    public static void main(String[] args) 
+    {
+        SpringApplication.run(DateApplication.class, args);
+    }
+
+    @GetMapping("/currentDate")
+    public String getCurrentDate() 
+    {
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        return "Current Date and Time: " + formatter.format(new Date());
+    }
+}

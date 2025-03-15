@@ -1,0 +1,179 @@
+class MythreadDemo 
+{
+    public static void main(String args[]) 
+    {
+        Thread t = Thread.currentThread();
+        System.out.println("Current Thread is: " + t);
+
+        try 
+        {
+            for (int n = 100; n > 0; n--) 
+            {
+                System.out.println(n);
+                Thread.sleep(6000);
+            }
+
+            t.setName("Demo Thread");
+            System.out.println("After changing the name, thread is: " + t);
+        } 
+        catch (InterruptedException e) 
+        {
+            System.out.println("Thread interrupted");
+        }
+    }
+}
+
+
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.regex.Pattern;
+
+public class CowinRegistration extends JFrame implements ActionListener {
+    private JTextField txtAadhar, txtBirthYear, txtMobile, txtHospital;
+    private JRadioButton age18, age45, covishield, covaxin, sputnik, morning, afternoon, evening;
+    private JButton btnAdd, btnUpdate, btnDelete, btnView, btnSearch;
+
+    public CowinRegistration() {
+        setTitle("Co-WIN Registration");
+        setSize(400, 500);
+        setLayout(new GridLayout(10, 2));
+
+        add(new JLabel("AadharCard No.:"));
+        txtAadhar = new JTextField();
+        add(txtAadhar);
+
+        add(new JLabel("Birth Year:"));
+        txtBirthYear = new JTextField();
+        add(txtBirthYear);
+
+        add(new JLabel("Mobile No.:"));
+        txtMobile = new JTextField();
+        add(txtMobile);
+
+        add(new JLabel("Age Group:"));
+        JPanel agePanel = new JPanel();
+        age18 = new JRadioButton("18 & above");
+        age45 = new JRadioButton("45 & above");
+        ButtonGroup ageGroup = new ButtonGroup();
+        ageGroup.add(age18);
+        ageGroup.add(age45);
+        agePanel.add(age18);
+        agePanel.add(age45);
+        add(agePanel);
+
+        add(new JLabel("Select Hospital:"));
+        txtHospital = new JTextField();
+        add(txtHospital);
+
+        add(new JLabel("Vaccines:"));
+        JPanel vaccinePanel = new JPanel();
+        covishield = new JRadioButton("Covishield");
+        covaxin = new JRadioButton("Covaxin");
+        sputnik = new JRadioButton("Sputnik V.");
+        ButtonGroup vaccineGroup = new ButtonGroup();
+        vaccineGroup.add(covishield);
+        vaccineGroup.add(covaxin);
+        vaccineGroup.add(sputnik);
+        vaccinePanel.add(covishield);
+        vaccinePanel.add(covaxin);
+        vaccinePanel.add(sputnik);
+        add(vaccinePanel);
+
+        add(new JLabel("Time Slot:"));
+        JPanel timePanel = new JPanel();
+        morning = new JRadioButton("Morning");
+        afternoon = new JRadioButton("Afternoon");
+        evening = new JRadioButton("Evening");
+        ButtonGroup timeGroup = new ButtonGroup();
+        timeGroup.add(morning);
+        timeGroup.add(afternoon);
+        timeGroup.add(evening);
+        timePanel.add(morning);
+        timePanel.add(afternoon);
+        timePanel.add(evening);
+        add(timePanel);
+
+        btnAdd = new JButton("ADD");
+        btnUpdate = new JButton("UPDATE");
+        btnDelete = new JButton("DELETE");
+        btnView = new JButton("VIEW");
+        btnSearch = new JButton("SEARCH");
+
+        btnAdd.addActionListener(this);
+        btnUpdate.addActionListener(this);
+        btnDelete.addActionListener(this);
+        btnView.addActionListener(this);
+        btnSearch.addActionListener(this);
+
+        add(btnAdd);
+        add(btnUpdate);
+        add(btnDelete);
+        add(btnView);
+        add(btnSearch);
+
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setVisible(true);
+    }
+
+    public void actionPerformed(ActionEvent e) {
+        try {
+            if (e.getSource() == btnAdd) {
+                validateForm();
+                JOptionPane.showMessageDialog(this, "Record Added Successfully!");
+            } else if (e.getSource() == btnUpdate) {
+                JOptionPane.showMessageDialog(this, "Record Updated Successfully!");
+            } else if (e.getSource() == btnDelete) {
+                JOptionPane.showMessageDialog(this, "Record Deleted Successfully!");
+            } else if (e.getSource() == btnView) {
+                JOptionPane.showMessageDialog(this, "Displaying All Records!");
+            } else if (e.getSource() == btnSearch) {
+                JOptionPane.showMessageDialog(this, "Searching Record!");
+            }
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage(), "Validation Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void validateForm() throws Exception {
+        String aadhar = txtAadhar.getText().trim();
+        String birthYear = txtBirthYear.getText().trim();
+        String mobile = txtMobile.getText().trim();
+        String hospital = txtHospital.getText().trim();
+
+        if (!Pattern.matches("\\d{12}", aadhar)) {
+            throw new Exception("Invalid Aadhar Number! Must be 12 digits.");
+        }
+
+        int year = Integer.parseInt(birthYear);
+        int currentYear = java.util.Calendar.getInstance().get(java.util.Calendar.YEAR);
+        if (year < 1900 || year > currentYear) {
+            throw new Exception("Invalid Birth Year! Must be between 1900 and " + currentYear);
+        }
+
+        if (!Pattern.matches("\\d{10}", mobile)) {
+            throw new Exception("Invalid Mobile Number! Must be 10 digits.");
+        }
+
+        if (!age18.isSelected() && !age45.isSelected()) {
+            throw new Exception("Please select an Age Group.");
+        }
+
+        if (hospital.isEmpty()) {
+            throw new Exception("Hospital Name cannot be empty.");
+        }
+
+        if (!covishield.isSelected() && !covaxin.isSelected() && !sputnik.isSelected()) {
+            throw new Exception("Please select a Vaccine.");
+        }
+
+        if (!morning.isSelected() && !afternoon.isSelected() && !evening.isSelected()) {
+            throw new Exception("Please select a Time Slot.");
+        }
+    }
+
+    public static void main(String[] args) {
+        new CowinRegistration();
+    }
+}

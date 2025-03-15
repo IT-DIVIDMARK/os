@@ -1,0 +1,93 @@
+import java.io.*;
+import java.util.*;
+import java.util.concurrent.*;
+
+class FileSearchTask implements Runnable {
+    private File file;
+    private String searchString;
+
+    public FileSearchTask(File file, String searchString) {
+        this.file = file;
+        this.searchString = searchString;
+    }
+
+    @Override
+    public void run() {
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line;
+            int lineNumber = 1;
+            while ((line = reader.readLine()) != null) {
+                if (line.contains(searchString)) {
+                    System.out.println("Found in " + file.getName() + " at line " + lineNumber + ": " + line);
+                }
+                lineNumber++;
+            }
+        } catch (IOException e) {
+            System.out.println("Error reading file: " + file.getName());
+        }
+    }
+}
+
+public class MultiThreadedSearchEngine {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter search string: ");
+        String searchString = sc.nextLine();
+        File currentDirectory = new File(".");
+
+        File[] textFiles = currentDirectory.listFiles((dir, name) -> name.endsWith(".txt"));
+
+        if (textFiles == null || textFiles.length == 0) {
+            System.out.println("No text files found in the current directory.");
+            return;
+        }
+
+        ExecutorService executor = Executors.newFixedThreadPool(textFiles.length);
+
+        for (File file : textFiles) {
+            executor.execute(new FileSearchTask(file, searchString));
+        }
+
+        executor.shutdown();
+        sc.close();
+    }
+}
+
+
+
+
+
+
+
+import java.sql.*;
+
+public class DonorTableMetadata {
+    public static void main(String[] args) {
+        String url = "jdbc:mysql://localhost:3306/your_database";
+        String user = "your_username";
+        String password = "your_password";
+
+        try (Connection conn = DriverManager.getConnection(url, user, password);
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery("SELECT * FROM DONAR")) {
+
+            ResultSetMetaData rsmd = rs.getMetaData();
+            int columnCount = rsmd.getColumnCount();
+
+            System.out.println("Column Information of DONAR Table:");
+            System.out.println("-------------------------------------------------");
+
+            for (int i = 1; i <= columnCount; i++) {
+                System.out.println("Column " + i + ":");
+                System.out.println("  Name          : " + rsmd.getColumnName(i));
+                System.out.println("  Type          : " + rsmd.getColumnTypeName(i));
+                System.out.println("  Size          : " + rsmd.getColumnDisplaySize(i));
+                System.out.println("  Nullable      : " + (rsmd.isNullable(i) == ResultSetMetaData.columnNullable ? "Yes" : "No"));
+                System.out.println("-------------------------------------------------");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+}

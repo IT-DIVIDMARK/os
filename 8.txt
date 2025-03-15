@@ -1,0 +1,96 @@
+class TestPrint extends Thread {
+    String msg;
+    int n;
+
+    TestPrint(String msg, int n) {
+        this.msg = msg;
+        this.n = n;
+    }
+
+    public void run() {
+        for (int i = 1; i <= n; i++) {
+            System.out.println(msg + " " + i + " times");
+        }
+        System.out.println();
+    }
+}
+
+class DemoMyThread {
+    public static void main(String args[]) {
+        if (args.length == 0) {
+            System.out.println("Please provide a number as a command-line argument.");
+            return;
+        }
+
+        int n;
+        try {
+            n = Integer.parseInt(args[0]);
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input. Please provide a valid integer.");
+            return;
+        }
+
+        TestPrint t1 = new TestPrint("COVID", n);
+        TestPrint t2 = new TestPrint("LOCKDOWN2020", n + 10);
+        TestPrint t3 = new TestPrint("Vaccinated2021", n + 20);
+
+        t1.start();
+        t2.start();
+        t3.start();
+
+        try {
+            t1.join();
+            t2.join();
+            t3.join();
+        } catch (InterruptedException e) {
+            System.out.println("Thread execution interrupted.");
+        }
+    }
+}
+
+
+
+
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Enumeration;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+@WebServlet("/RequestInfoServlet")
+public class RequestInfoServlet extends HttpServlet 
+{
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
+    {
+        response.setContentType("text/html");
+        PrintWriter out = response.getWriter();
+
+        String clientIP = request.getRemoteAddr();
+        String browserType = request.getHeader("User-Agent");
+
+        ServletContext context = getServletContext();
+        String serverOS = System.getProperty("os.name");
+        Enumeration<String> servletNames = context.getServletNames();
+
+        out.println("<html><head><title>Request & Server Info</title></head><body>");
+        out.println("<h2>Client Information</h2>");
+        out.println("<p><b>IP Address:</b> " + clientIP + "</p>");
+        out.println("<p><b>Browser Type:</b> " + browserType + "</p>");
+
+        out.println("<h2>Server Information</h2>");
+        out.println("<p><b>Operating System:</b> " + serverOS + "</p>");
+        out.println("<h3>Loaded Servlets:</h3>");
+        while (servletNames.hasMoreElements()) 
+        {
+            out.println("<p>" + servletNames.nextElement() + "</p>");
+        }
+
+        out.println("</body></html>");
+    }
+}
+

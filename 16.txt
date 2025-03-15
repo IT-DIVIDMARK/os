@@ -1,0 +1,84 @@
+import java.util.*;
+import java.io.*;
+
+public class Phonebook {
+    public static void main(String args[]) {
+        try {
+            FileInputStream fis = new FileInputStream("home/desktop/myfile.txt");
+            Scanner sc = new Scanner(fis);
+            Hashtable<String, String> ht = new Hashtable<>();
+
+            while (sc.hasNextLine()) {
+                String line = sc.nextLine();
+                String[] strarray = line.split("\t");
+
+                if (strarray.length == 2) {
+                    ht.put(strarray[0], strarray[1]);
+                }
+            }
+            sc.close();
+
+            Scanner s = new Scanner(System.in);
+            System.out.println("Enter the name as given in the phone book:");
+            String str = s.next();
+
+            if (ht.containsKey(str)) {
+                System.out.println("Phone no is: " + ht.get(str));
+            } else {
+                System.out.println("Name is not matching with the phone book");
+            }
+            s.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found. Please check the file path.");
+        } catch (Exception e) {
+            System.out.println("An error occurred: " + e);
+        }
+    }
+}
+
+
+
+
+
+
+
+
+import java.sql.*;
+
+public class DatabaseInfo 
+{
+    public static void main(String[] args) 
+    {
+        String url = "jdbc:mysql://localhost:3306/yourDatabase";
+        String user = "yourUsername";
+        String password = "yourPassword";
+
+        try 
+        {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection conn = DriverManager.getConnection(url, user, password);
+            DatabaseMetaData metaData = conn.getMetaData();
+
+            System.out.println("Database Information:");
+            System.out.println("Database Name: " + metaData.getDatabaseProductName());
+            System.out.println("Database Version: " + metaData.getDatabaseProductVersion());
+            System.out.println("Driver Name: " + metaData.getDriverName());
+            System.out.println("Driver Version: " + metaData.getDriverVersion());
+
+            System.out.println("\nTables in the Database:");
+            ResultSet tables = metaData.getTables(null, null, "%", new String[]{"TABLE"});
+            while (tables.next()) 
+            {
+                System.out.println(tables.getString("TABLE_NAME"));
+            }
+
+            tables.close();
+            conn.close();
+        } 
+        catch (Exception e) 
+        {
+            e.printStackTrace();
+        }
+    }
+}
+

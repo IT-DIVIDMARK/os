@@ -1,0 +1,244 @@
+class TestPrint extends Thread {
+    String msg;
+    int n;
+
+    TestPrint(String msg, int n) {
+        this.msg = msg;
+        this.n = n;
+    }
+
+    public void run() {
+        for (int i = 1; i <= n; i++) {
+            System.out.println(msg + " " + i + " times");
+        }
+        System.out.println();
+    }
+}
+
+class DemoMyThread {
+    public static void main(String args[]) {
+        if (args.length == 0) {
+            System.out.println("Please provide a number as a command-line argument.");
+            return;
+        }
+
+        int n;
+        try {
+            n = Integer.parseInt(args[0]);
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input. Please provide a valid integer.");
+            return;
+        }
+
+        TestPrint t1 = new TestPrint("COVID", n);
+        TestPrint t2 = new TestPrint("LOCKDOWN2020", n + 10);
+        TestPrint t3 = new TestPrint("Vaccinated2021", n + 20);
+
+        t1.start();
+        t2.start();
+        t3.start();
+
+        try {
+            t1.join();
+            t2.join();
+            t3.join();
+        } catch (InterruptedException e) {
+            System.out.println("Thread execution interrupted.");
+        }
+    }
+}
+
+
+
+CREATE TABLE MOBILE (
+    Model_Number INT PRIMARY KEY,
+    Model_Name VARCHAR(50),
+    Model_Color VARCHAR(30),
+    Sim_Type VARCHAR(20),
+    NetworkType VARCHAR(20),
+    BatteryCapacity INT,
+    InternalStorage INT,
+    RAM INT,
+    ProcessorType VARCHAR(50)
+);
+
+INSERT INTO MOBILE VALUES 
+(101, 'Samsung S21', 'Black', 'Dual SIM', '5G', 4000, 128, 8, 'Exynos'),
+(102, 'iPhone 13', 'Blue', 'Single SIM', '5G', 3500, 256, 6, 'A15 Bionic'),
+(103, 'OnePlus 9', 'Silver', 'Dual SIM', '5G', 4500, 256, 12, 'Snapdragon 888');
+
+
+
+
+
+
+import java.sql.*;
+import java.util.Scanner;
+
+public class MobileDatabase 
+{
+    static final String URL = "jdbc:mysql://localhost:3306/yourDatabase";
+    static final String USER = "yourUsername";
+    static final String PASSWORD = "yourPassword";
+    
+    public static void main(String[] args) 
+    {
+        Scanner sc = new Scanner(System.in);
+        
+        try 
+        {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+            
+            while (true) 
+            {
+                System.out.println("\n1. Insert\n2. Modify\n3. Delete\n4. Search\n5. View All\n6. Exit");
+                System.out.print("Enter your choice: ");
+                int choice = sc.nextInt();
+                
+                switch (choice) 
+                {
+                    case 1:
+                        insertRecord(conn, sc);
+                        break;
+                    case 2:
+                        modifyRecord(conn, sc);
+                        break;
+                    case 3:
+                        deleteRecord(conn, sc);
+                        break;
+                    case 4:
+                        searchRecord(conn, sc);
+                        break;
+                    case 5:
+                        viewAllRecords(conn);
+                        break;
+                    case 6:
+                        conn.close();
+                        System.out.println("Exiting...");
+                        System.exit(0);
+                    default:
+                        System.out.println("Invalid choice. Try again.");
+                }
+            }
+        } 
+        catch (Exception e) 
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public static void insertRecord(Connection conn, Scanner sc) throws SQLException 
+    {
+        System.out.print("Enter Model Number: ");
+        int modelNumber = sc.nextInt();
+        sc.nextLine();  
+        System.out.print("Enter Model Name: ");
+        String modelName = sc.nextLine();
+        System.out.print("Enter Model Color: ");
+        String modelColor = sc.nextLine();
+        System.out.print("Enter SIM Type: ");
+        String simType = sc.nextLine();
+        System.out.print("Enter Network Type: ");
+        String networkType = sc.nextLine();
+        System.out.print("Enter Battery Capacity (mAh): ");
+        int batteryCapacity = sc.nextInt();
+        System.out.print("Enter Internal Storage (GB): ");
+        int internalStorage = sc.nextInt();
+        System.out.print("Enter RAM (GB): ");
+        int ram = sc.nextInt();
+        sc.nextLine();
+        System.out.print("Enter Processor Type: ");
+        String processorType = sc.nextLine();
+
+        PreparedStatement pst = conn.prepareStatement("INSERT INTO MOBILE VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        pst.setInt(1, modelNumber);
+        pst.setString(2, modelName);
+        pst.setString(3, modelColor);
+        pst.setString(4, simType);
+        pst.setString(5, networkType);
+        pst.setInt(6, batteryCapacity);
+        pst.setInt(7, internalStorage);
+        pst.setInt(8, ram);
+        pst.setString(9, processorType);
+
+        int rows = pst.executeUpdate();
+        System.out.println(rows > 0 ? "Record Inserted Successfully!" : "Insertion Failed!");
+    }
+
+    public static void modifyRecord(Connection conn, Scanner sc) throws SQLException 
+    {
+        System.out.print("Enter Model Number to Modify: ");
+        int modelNumber = sc.nextInt();
+        sc.nextLine();
+        System.out.print("Enter New Model Name: ");
+        String newModelName = sc.nextLine();
+        
+        PreparedStatement pst = conn.prepareStatement("UPDATE MOBILE SET Model_Name = ? WHERE Model_Number = ?");
+        pst.setString(1, newModelName);
+        pst.setInt(2, modelNumber);
+
+        int rows = pst.executeUpdate();
+        System.out.println(rows > 0 ? "Record Updated Successfully!" : "Update Failed!");
+    }
+
+    public static void deleteRecord(Connection conn, Scanner sc) throws SQLException 
+    {
+        System.out.print("Enter Model Number to Delete: ");
+        int modelNumber = sc.nextInt();
+
+        PreparedStatement pst = conn.prepareStatement("DELETE FROM MOBILE WHERE Model_Number = ?");
+        pst.setInt(1, modelNumber);
+
+        int rows = pst.executeUpdate();
+        System.out.println(rows > 0 ? "Record Deleted Successfully!" : "Deletion Failed!");
+    }
+
+    public static void searchRecord(Connection conn, Scanner sc) throws SQLException 
+    {
+        System.out.print("Enter Model Number to Search: ");
+        int modelNumber = sc.nextInt();
+
+        PreparedStatement pst = conn.prepareStatement("SELECT * FROM MOBILE WHERE Model_Number = ?");
+        pst.setInt(1, modelNumber);
+        ResultSet rs = pst.executeQuery();
+
+        if (rs.next()) 
+        {
+            System.out.println("\nModel Number: " + rs.getInt("Model_Number"));
+            System.out.println("Model Name: " + rs.getString("Model_Name"));
+            System.out.println("Model Color: " + rs.getString("Model_Color"));
+            System.out.println("SIM Type: " + rs.getString("Sim_Type"));
+            System.out.println("Network Type: " + rs.getString("NetworkType"));
+            System.out.println("Battery Capacity: " + rs.getInt("BatteryCapacity") + " mAh");
+            System.out.println("Internal Storage: " + rs.getInt("InternalStorage") + " GB");
+            System.out.println("RAM: " + rs.getInt("RAM") + " GB");
+            System.out.println("Processor Type: " + rs.getString("ProcessorType"));
+        } 
+        else 
+        {
+            System.out.println("No Record Found!");
+        }
+    }
+
+    public static void viewAllRecords(Connection conn) throws SQLException 
+    {
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery("SELECT * FROM MOBILE");
+
+        System.out.println("\nMobile Details:");
+        while (rs.next()) 
+        {
+            System.out.println("Model Number: " + rs.getInt("Model_Number") +
+                               ", Name: " + rs.getString("Model_Name") +
+                               ", Color: " + rs.getString("Model_Color") +
+                               ", SIM: " + rs.getString("Sim_Type") +
+                               ", Network: " + rs.getString("NetworkType") +
+                               ", Battery: " + rs.getInt("BatteryCapacity") + " mAh" +
+                               ", Storage: " + rs.getInt("InternalStorage") + " GB" +
+                               ", RAM: " + rs.getInt("RAM") + " GB" +
+                               ", Processor: " + rs.getString("ProcessorType"));
+        }
+    }
+}
+

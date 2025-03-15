@@ -1,0 +1,87 @@
+import java.util.*;
+import java.io.*;
+
+public class ArrayListDemo 
+{
+    public static void main(String args[]) throws Exception 
+    {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        ArrayList<String> al = new ArrayList<>();
+
+        System.out.println("\nHow many Cities?");
+        int n = Integer.parseInt(br.readLine());
+
+        System.out.println("\nEnter City names:");
+        for (int i = 0; i < n; i++) 
+        {
+            al.add(br.readLine());
+        }
+
+        System.out.println("Entered cities are: " + al);
+
+        al.removeAll(al);
+        System.out.println("All cities are removed from the ArrayList: " + al);
+    }
+}
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Subject</title>
+</head>
+<body>
+
+    <h2>Select Your Favorite Subject</h2>
+    
+    <form action="process.jsp" method="post">
+        <input type="radio" name="subject" value="Maths" required> Maths<br>
+        <input type="radio" name="subject" value="Physics"> Physics<br>
+        <input type="radio" name="subject" value="Chemistry"> Chemistry<br>
+        <input type="radio" name="subject" value="Biology"> Biology<br><br>
+
+        <input type="submit" value="Submit">
+        <input type="reset" value="Reset">
+    </form>
+
+</body>
+</html>
+
+
+
+
+<%@ page import="java.io.*, javax.servlet.http.*, javax.servlet.*" %>
+<%
+    String selectedSubject = request.getParameter("subject");
+    boolean cookieExists = false;
+
+    Cookie[] cookies = request.getCookies();
+    if (cookies != null) {
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals("subject") && cookie.getValue().equals(selectedSubject)) {
+                cookieExists = true;
+                break;
+            }
+        }
+    }
+
+    if (!cookieExists) {
+        Cookie subjectCookie = new Cookie("subject", selectedSubject);
+        subjectCookie.setMaxAge(24 * 60 * 60);
+        response.addCookie(subjectCookie);
+%>
+        <h2>Subject Selection Successful!</h2>
+        <p>You have selected: <b><%= selectedSubject %></b></p>
+<%
+    } else {
+%>
+        <h2>Duplicate Subject Selection</h2>
+        <p>You have already selected <b><%= selectedSubject %></b>. No duplicate cookie was written.</p>
+<%
+    }
+%>
+
+<a href="index.html">Go Back</a>

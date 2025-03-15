@@ -1,0 +1,69 @@
+import java.util.*;
+
+class TreeSetDemo 
+{
+    public static void main(String args[]) 
+    {
+        TreeSet<String> ts = new TreeSet<>();
+
+        ts.add("Red");
+        ts.add("Yellow");
+        ts.add("Blue");
+        ts.add("Black");
+        ts.add("Orange");
+        ts.add("Green");
+
+        System.out.println("TreeSet is: " + ts);
+    }
+}
+
+
+
+
+package com.example.springcore;
+
+public class MessageService 
+{
+    public String getMessage() 
+    {
+        return "If you can't explain it simply, you don't understand it well enough.";
+    }
+}
+
+
+
+package com.example.springcore;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class AppConfig 
+{
+    @Bean
+    public MessageService messageService() 
+    {
+        return new MessageService();
+    }
+}
+
+
+
+
+package com.example.springcore;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
+public class MainApp 
+{
+    public static void main(String[] args) 
+    {
+        ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
+        MessageService messageService = context.getBean(MessageService.class);
+        System.out.println(messageService.getMessage());
+    }
+}
+
+
+

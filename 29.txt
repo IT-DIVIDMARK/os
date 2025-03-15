@@ -1,0 +1,78 @@
+class MythreadDemo 
+{
+    public static void main(String args[]) 
+    {
+        Thread t = Thread.currentThread();
+        System.out.println("Current Thread is: " + t);
+
+        try 
+        {
+            for (int n = 100; n > 0; n--) 
+            {
+                System.out.println(n);
+                Thread.sleep(6000);
+            }
+
+            t.setName("Demo Thread");
+            System.out.println("After changing the name, thread is: " + t);
+        } 
+        catch (InterruptedException e) 
+        {
+            System.out.println("Thread interrupted");
+        }
+    }
+}
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subject Selection</title>
+</head>
+<body>
+    <h2>Select Your Favorite Subject</h2>
+    <form action="setSubject.jsp" method="post">
+        <input type="radio" name="subject" value="Maths" required> Maths <br>
+        <input type="radio" name="subject" value="Physics"> Physics <br>
+        <input type="radio" name="subject" value="Chemistry"> Chemistry <br>
+        <input type="radio" name="subject" value="Biology"> Biology <br><br>
+        <input type="submit" value="Submit">
+        <input type="reset" value="Reset">
+    </form>
+</body>
+</html>
+
+
+
+
+
+<%@ page import="java.io.*, javax.servlet.*, javax.servlet.http.*" %>
+<%
+    String selectedSubject = request.getParameter("subject");
+    boolean cookieExists = false;
+
+    Cookie[] cookies = request.getCookies();
+    if (cookies != null) {
+        for (Cookie c : cookies) {
+            if (c.getName().equals("selectedSubject")) {
+                cookieExists = true;
+                break;
+            }
+        }
+    }
+
+    if (!cookieExists) {
+        Cookie subjectCookie = new Cookie("selectedSubject", selectedSubject);
+        subjectCookie.setMaxAge(24 * 60 * 60); // 1 day expiry
+        response.addCookie(subjectCookie);
+        out.println("<h3>Subject " + selectedSubject + " has been saved!</h3>");
+    } else {
+        out.println("<h3>Cookie already exists! You cannot select another subject.</h3>");
+    }
+%>
+<a href="subject_selection.html">Go Back</a>

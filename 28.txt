@@ -1,0 +1,124 @@
+import java.util.*;
+import java.io.*;
+
+public class Phonebook {
+    public static void main(String args[]) {
+        try {
+            File file = new File("home/desktop/myfile.txt");
+            Scanner sc = new Scanner(file);
+            Hashtable<String, String> ht = new Hashtable<>();
+            String[] strarray;
+            String a, str;
+
+            while (sc.hasNextLine()) {
+                a = sc.nextLine();
+                strarray = a.split("\t");
+
+                if (strarray.length >= 2) {
+                    ht.put(strarray[0], strarray[1]);
+                    System.out.println("Hashtable values are: " + strarray[0] + ": " + strarray[1]);
+                }
+            }
+            sc.close();
+
+            Scanner s = new Scanner(System.in);
+            System.out.println("Enter the name as given in the phone book:");
+            str = s.nextLine();
+
+            if (ht.containsKey(str)) {
+                System.out.println("Phone no is: " + ht.get(str));
+            } else {
+                System.out.println("Name is not matching with the phone book");
+            }
+            s.close();
+
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+}
+
+
+
+CREATE TABLE PATIENT (
+    PatientNo INT PRIMARY KEY,
+    PatientName VARCHAR(50),
+    PatientAddress VARCHAR(100),
+    PatientAge INT,
+    PatientDisease VARCHAR(50)
+);
+
+
+
+INSERT INTO PATIENT VALUES
+(1, 'John Doe', 'New York', 45, 'Diabetes'),
+(2, 'Jane Smith', 'Los Angeles', 30, 'Asthma'),
+(3, 'Michael Johnson', 'Chicago', 55, 'Hypertension');
+
+
+
+<%@ page import="java.sql.*" %>
+<html>
+<head>
+    <title>Patient Details</title>
+    <style>
+        table {
+            width: 80%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 18px;
+            text-align: left;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h2>Patient Details</h2>
+    <table>
+        <tr>
+            <th>Patient No</th>
+            <th>Name</th>
+            <th>Address</th>
+            <th>Age</th>
+            <th>Disease</th>
+        </tr>
+
+        <%
+            String url = "jdbc:mysql://localhost:3306/your_database";
+            String user = "your_username";
+            String password = "your_password";
+            
+            try {
+                Class.forName("com.mysql.cj.jdbc.Driver");
+                Connection con = DriverManager.getConnection(url, user, password);
+                Statement stmt = con.createStatement();
+                ResultSet rs = stmt.executeQuery("SELECT * FROM PATIENT");
+
+                while (rs.next()) {
+        %>
+        <tr>
+            <td><%= rs.getInt("PatientNo") %></td>
+            <td><%= rs.getString("PatientName") %></td>
+            <td><%= rs.getString("PatientAddress") %></td>
+            <td><%= rs.getInt("PatientAge") %></td>
+            <td><%= rs.getString("PatientDisease") %></td>
+        </tr>
+        <%
+                }
+                con.close();
+            } catch (Exception e) {
+                out.println("<p>Error: " + e.getMessage() + "</p>");
+            }
+        %>
+    </table>
+</body>
+</html>
+

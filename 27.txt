@@ -1,0 +1,74 @@
+import java.util.*;
+
+class HashMapDemo 
+{
+    public static void main(String args[]) 
+    {
+        HashMap<Integer, String> ha = new HashMap<>();
+
+        ha.put(10, "Java");
+        ha.put(20, "Operating System");
+        ha.put(30, "Software Testing Tools");
+        ha.put(40, "Compiler Construction");
+        ha.put(50, "Web Technologies");
+
+        System.out.println("Before Sorting:");
+        Set<Map.Entry<Integer, String>> set = ha.entrySet();
+        Iterator<Map.Entry<Integer, String>> it = set.iterator();
+
+        while (it.hasNext()) 
+        {
+            Map.Entry<Integer, String> me = it.next();
+            System.out.print(me.getKey() + ": ");
+            System.out.println(me.getValue());
+        }
+
+        Map<Integer, String> map = new TreeMap<>(ha);
+        System.out.println("After Sorting:");
+        Set<Map.Entry<Integer, String>> set1 = map.entrySet();
+        Iterator<Map.Entry<Integer, String>> it2 = set1.iterator();
+
+        while (it2.hasNext()) 
+        {
+            Map.Entry<Integer, String> me2 = it2.next();
+            System.out.print(me2.getKey() + ": ");
+            System.out.println(me2.getValue());
+        }
+    }
+}
+
+
+
+import java.sql.*;
+
+public class DonarTableMetadata {
+    public static void main(String[] args) {
+        String url = "jdbc:mysql://localhost:3306/your_database";
+        String user = "your_username";
+        String password = "your_password";
+
+        try (Connection conn = DriverManager.getConnection(url, user, password);
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery("SELECT * FROM DONAR")) {
+
+            ResultSetMetaData rsmd = rs.getMetaData();
+            int columnCount = rsmd.getColumnCount();
+
+            System.out.println("Column Information of DONAR Table:");
+            System.out.println("-------------------------------------------------");
+
+            for (int i = 1; i <= columnCount; i++) {
+                System.out.println("Column " + i + ":");
+                System.out.println("  Name          : " + rsmd.getColumnName(i));
+                System.out.println("  Type          : " + rsmd.getColumnTypeName(i));
+                System.out.println("  Size          : " + rsmd.getColumnDisplaySize(i));
+                System.out.println("  Nullable      : " + (rsmd.isNullable(i) == ResultSetMetaData.columnNullable ? "Yes" : "No"));
+                System.out.println("-------------------------------------------------");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+}
+

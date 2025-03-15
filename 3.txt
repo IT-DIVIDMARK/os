@@ -1,0 +1,102 @@
+import java.util.*;
+
+class TreeSetDemo {
+    public static void main(String args[]) {
+        TreeSet<String> ts = new TreeSet<>();
+        ts.add("Red");
+        ts.add("Yellow");
+        ts.add("Blue");
+        ts.add("Black");
+        ts.add("Orange");
+        ts.add("Green");
+
+        System.out.println("TreeSet is: " + ts);
+    }
+}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Search</title>
+</head>
+<body>
+
+    <h2>Search Customer Details</h2>
+    
+    <form action="SearchCustomerServlet" method="GET">
+        Enter Customer Number: <input type="text" name="customerNumber" required>
+        <br><br>
+        <input type="submit" value="Search">
+    </form>
+
+</body>
+</html>
+
+
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.*;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+@WebServlet("/SearchCustomerServlet")
+public class SearchCustomerServlet extends HttpServlet 
+{
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
+    {
+        response.setContentType("text/html");
+        PrintWriter out = response.getWriter();
+        
+        String customerNumber = request.getParameter("customerNumber");
+        
+        try 
+        {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/yourDatabase", "yourUsername", "yourPassword");
+            PreparedStatement pst = conn.prepareStatement("SELECT * FROM customer WHERE customer_number = ?");
+            pst.setString(1, customerNumber);
+            
+            ResultSet rs = pst.executeQuery();
+            
+            if (rs.next()) 
+            {
+                out.println("<h2>Customer Details</h2>");
+                out.println("<p><b>Customer Number:</b> " + rs.getString("customer_number") + "</p>");
+                out.println("<p><b>Name:</b> " + rs.getString("name") + "</p>");
+                out.println("<p><b>Email:</b> " + rs.getString("email") + "</p>");
+                out.println("<p><b>Phone:</b> " + rs.getString("phone") + "</p>");
+            } 
+            else 
+            {
+                out.println("<h2>Customer Not Found</h2>");
+                out.println("<p>No customer found with Customer Number: " + customerNumber + "</p>");
+            }
+            
+            rs.close();
+            pst.close();
+            conn.close();
+        } 
+        catch (Exception e) 
+        {
+            out.println("<h2>Error</h2>");
+            out.println("<p>" + e.getMessage() + "</p>");
+        }
+    }
+}
+
+
+
+
+CREATE TABLE customer (
+    customer_number VARCHAR(20) PRIMARY KEY,
+    name VARCHAR(100),
+    email VARCHAR(100),
+    phone VARCHAR(20)
+);

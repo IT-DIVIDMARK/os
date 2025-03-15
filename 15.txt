@@ -1,0 +1,111 @@
+import java.util.*;
+
+class HashMapDemo 
+{
+    public static void main(String args[]) 
+    {
+        HashMap<Integer, String> ha = new HashMap<>();
+
+        ha.put(10, "Java");
+        ha.put(20, "Operating System");
+        ha.put(30, "Software Testing Tools");
+        ha.put(40, "Compiler Construction");
+        ha.put(50, "Web Technologies");
+
+        System.out.println("Before Sorting:");
+        Set set = ha.entrySet();
+        Iterator it = set.iterator();
+
+        while (it.hasNext()) 
+        {
+            Map.Entry me = (Map.Entry) it.next();
+            System.out.print(me.getKey() + ": ");
+            System.out.println(me.getValue());
+        }
+
+        Map<Integer, String> map = new TreeMap<>(ha);
+        System.out.println("After Sorting:");
+        Set set1 = map.entrySet();
+        Iterator it2 = set1.iterator();
+
+        while (it2.hasNext()) 
+        {
+            Map.Entry me2 = (Map.Entry) it2.next();
+            System.out.print(me2.getKey() + ": ");
+            System.out.println(me2.getValue());
+        }
+    }
+}
+
+
+
+CREATE TABLE PROJECT (
+    project_id INT PRIMARY KEY AUTO_INCREMENT,
+    project_name VARCHAR(100),
+    project_description TEXT,
+    project_status VARCHAR(50)
+);
+
+INSERT INTO PROJECT (project_name, project_description, project_status) VALUES
+('AI Chatbot', 'A chatbot using NLP and AI', 'In Progress'),
+('E-Commerce Website', 'An online shopping platform', 'Completed'),
+('Hospital Management', 'Software for hospital records', 'Pending');
+
+
+
+
+
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.sql.*;
+
+public class ProjectTableDisplay extends JFrame 
+{
+    public ProjectTableDisplay() 
+    {
+        setTitle("Project Table Details");
+        setSize(600, 400);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+
+        String[] columnNames = {"Project ID", "Project Name", "Description", "Status"};
+        DefaultTableModel model = new DefaultTableModel(columnNames, 0);
+        JTable table = new JTable(model);
+        JScrollPane scrollPane = new JScrollPane(table);
+        add(scrollPane, BorderLayout.CENTER);
+
+        try 
+        {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/yourDatabase", "yourUsername", "yourPassword");
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM PROJECT");
+
+            while (rs.next()) 
+            {
+                int id = rs.getInt("project_id");
+                String name = rs.getString("project_name");
+                String desc = rs.getString("project_description");
+                String status = rs.getString("project_status");
+
+                model.addRow(new Object[]{id, name, desc, status});
+            }
+
+            rs.close();
+            stmt.close();
+            conn.close();
+        } 
+        catch (Exception e) 
+        {
+            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
+        }
+    }
+
+    public static void main(String[] args) 
+    {
+        SwingUtilities.invokeLater(() -> new ProjectTableDisplay().setVisible(true));
+    }
+}
+

@@ -1,0 +1,84 @@
+import java.util.*;
+import java.io.*;
+
+class HashTableDemo 
+{
+    public static void main(String args[]) 
+    {
+        Hashtable<String, Long> ht = new Hashtable<>();
+        Enumeration<String> names;
+        String str;
+
+        ht.put("Amar", 2222222222L);
+        ht.put("Anil", 3333333333L);
+        ht.put("Soham", 8888888888L);
+        ht.put("Kiran", 9999999999L);
+        ht.put("Williams", 4444444444L);
+
+        names = ht.keys();
+
+        while (names.hasMoreElements()) 
+        {
+            str = names.nextElement();
+            System.out.println(str + ": " + ht.get(str));
+        }
+    }
+}
+
+
+
+
+CREATE TABLE PROJECT (
+    project_id INT PRIMARY KEY,
+    project_name VARCHAR(100),
+    project_description TEXT,
+    project_status VARCHAR(50)
+);
+
+
+INSERT INTO PROJECT VALUES
+(1, 'AI Chatbot', 'Develop an AI-powered chatbot.', 'In Progress'),
+(2, 'E-commerce Website', 'Build an online shopping platform.', 'Completed'),
+(3, 'Data Analytics Dashboard', 'Create a dashboard for business insights.', 'Pending');
+
+
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.sql.*;
+
+public class ProjectTableSwing {
+    public static void main(String[] args) {
+        JFrame frame = new JFrame("Project Details");
+        frame.setSize(600, 400);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        String[] columnNames = {"Project ID", "Project Name", "Description", "Status"};
+        DefaultTableModel model = new DefaultTableModel(columnNames, 0);
+        JTable table = new JTable(model);
+        JScrollPane scrollPane = new JScrollPane(table);
+        frame.add(scrollPane, BorderLayout.CENTER);
+
+        try {
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/your_database", "your_username", "your_password");
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM PROJECT");
+
+            while (rs.next()) {
+                int id = rs.getInt("project_id");
+                String name = rs.getString("project_name");
+                String desc = rs.getString("project_description");
+                String status = rs.getString("project_status");
+                model.addRow(new Object[]{id, name, desc, status});
+            }
+
+            con.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        frame.setVisible(true);
+    }
+}
+

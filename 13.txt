@@ -1,0 +1,77 @@
+import java.util.*;
+import java.io.*;
+
+class HashTableDemo 
+{
+    public static void main(String args[]) 
+    {
+        Hashtable<String, Long> ht = new Hashtable<>();
+        Enumeration<String> names;
+        String str;
+
+        ht.put("Amar", 2222222222L);
+        ht.put("Anil", 3333333333L);
+        ht.put("Soham", 8888888888L);
+        ht.put("Kiran", 9999999999L);
+        ht.put("Williams", 4444444444L);
+
+        names = ht.keys();
+
+        while (names.hasMoreElements()) 
+        {
+            str = names.nextElement();
+            System.out.println(str + ": " + ht.get(str));
+        }
+    }
+}
+
+
+
+package com.example.springcore;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+public class DateService 
+{
+    public String getCurrentDate() 
+    {
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        return "Current Date and Time: " + formatter.format(new Date());
+    }
+}
+
+
+
+package com.example.springcore;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class AppConfig 
+{
+    @Bean
+    public DateService dateService() 
+    {
+        return new DateService();
+    }
+}
+
+
+
+
+package com.example.springcore;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
+public class MainApp 
+{
+    public static void main(String[] args) 
+    {
+        ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
+        DateService dateService = context.getBean(DateService.class);
+        System.out.println(dateService.getCurrentDate());
+    }
+}

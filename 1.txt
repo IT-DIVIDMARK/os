@@ -1,0 +1,95 @@
+import java.util.*;
+import java.io.*;
+
+public class ArrayListDemo 
+{
+    public static void main(String args[]) throws Exception 
+    {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        ArrayList al = new ArrayList();
+
+        System.out.println("\nHow many Cities?");
+        int n = Integer.parseInt(br.readLine());
+
+        System.out.println("\nEnter City names:");
+        for (int i = 0; i < n; i++) 
+        {
+            al.add(br.readLine());
+        }
+
+        System.out.println("Entered cities are: " + al);
+        al.clear();
+        
+        System.out.println("All cities are removed from the ArrayList: " + al);
+    }
+}
+
+
+
+
+
+
+<%@ page import="java.util.*, java.text.SimpleDateFormat" %>
+
+<html>
+<head>
+    <title>JSP Implicit Objects Demo</title>
+</head>
+<body>
+
+    <h2>JSP Implicit Objects Demonstration</h2>
+
+    <h3>Current Date and Time:</h3>
+    <%
+        Date now = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        out.println(formatter.format(now));
+    %>
+
+    <h3>Request Headers:</h3>
+    <%
+        Enumeration<String> headerNames = request.getHeaderNames();
+        while (headerNames.hasMoreElements()) {
+            String headerName = headerNames.nextElement();
+            out.println(headerName + " : " + request.getHeader(headerName) + "<br>");
+        }
+    %>
+
+    <%
+        Cookie cookie = new Cookie("user", "Guest");
+        cookie.setMaxAge(60 * 60 * 24);
+        response.addCookie(cookie);
+    %>
+    <h3>Cookie 'user' has been added.</h3>
+
+    <h3>Servlet Configuration Parameter:</h3>
+    <%
+        String configParam = config.getInitParameter("AppName");
+        out.println("App Name: " + (configParam != null ? configParam : "Not Defined"));
+    %>
+
+    <h3>Application Parameter:</h3>
+    <%
+        String appParam = application.getInitParameter("AdminEmail");
+        out.println("Admin Email: " + (appParam != null ? appParam : "Not Defined"));
+    %>
+
+    <h3>Session ID:</h3>
+    <%
+        out.println("Session ID: " + session.getId());
+    %>
+
+    <h3>PageContext Attributes:</h3>
+    <%
+        pageContext.setAttribute("message", "Hello from PageContext!");
+        String msg = (String) pageContext.getAttribute("message");
+        out.println("Message from PageContext: " + msg);
+    %>
+
+    <h3>Generated Servlet Name:</h3>
+    <%
+        out.println("Generated Servlet Class: " + page.getClass().getName());
+    %>
+
+</body>
+</html>

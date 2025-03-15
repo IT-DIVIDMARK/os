@@ -1,0 +1,91 @@
+import java.util.*;
+import java.io.*;
+
+class SETB1 
+{
+    public static void main(String[] args) throws Exception 
+    {
+        int no, element, i;
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        TreeSet<Integer> ts = new TreeSet<>();
+
+        System.out.println("Enter the number of elements:");
+        no = Integer.parseInt(br.readLine());
+
+        for (i = 0; i < no; i++) 
+        {
+            System.out.println("Enter the element:");
+            element = Integer.parseInt(br.readLine());
+            ts.add(element);
+        }
+
+        System.out.println("The elements in sorted order: " + ts);
+        System.out.println("Enter element to be searched:");
+        element = Integer.parseInt(br.readLine());
+
+        if (ts.contains(element)) 
+        {
+            System.out.println("Element is found");
+        } 
+        else 
+        {
+            System.out.println("Element is NOT found");
+        }
+    }
+}
+
+
+
+
+
+
+
+
+package com.example.springcore;
+
+public class MessageService 
+{
+    public String getMessage() 
+    {
+        return "If you can't explain it simply, you don't understand it well enough.";
+    }
+}
+
+
+
+package com.example.springcore;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class AppConfig 
+{
+    @Bean
+    public MessageService messageService() 
+    {
+        return new MessageService();
+    }
+}
+
+
+
+
+package com.example.springcore;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
+public class MainApp 
+{
+    public static void main(String[] args) 
+    {
+        ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
+        MessageService messageService = context.getBean(MessageService.class);
+        System.out.println(messageService.getMessage());
+    }
+}
+
+
+
+

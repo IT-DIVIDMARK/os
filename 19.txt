@@ -1,0 +1,85 @@
+public class Communication {
+    public static void main(String args[]) {
+        Producer p = new Producer();
+        Consumer c = new Consumer(p);
+        Thread t1 = new Thread(p);
+        Thread t2 = new Thread(c);
+        t1.start();
+        t2.start();
+    }
+}
+
+class Producer extends Thread {
+    StringBuffer sb;
+    
+    Producer() {
+        sb = new StringBuffer();
+    }
+
+    public void run() {
+        synchronized (sb) {
+            for (int i = 1; i <= 10; i++) {
+                try {
+                    sb.append(i).append(":");
+                    Thread.sleep(100);
+                    System.out.println("Appending");
+                } catch (InterruptedException ae) {
+                    System.out.println(ae);
+                }
+            }
+            sb.notify();
+        }
+    }
+}
+
+class Consumer extends Thread {
+    Producer prod;
+
+    Consumer(Producer prod) {
+        this.prod = prod;
+    }
+
+    public void run() {
+        synchronized (prod.sb) {
+            try {
+                prod.sb.wait();
+            } catch (InterruptedException ae) {
+                System.out.println(ae);
+            }
+            System.out.println(prod.sb);
+        }
+    }
+}
+
+
+
+
+import java.sql.*;
+
+public class DonarTableMetadata {
+    public static void main(String[] args) {
+        try {
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/db", "user", "password");
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM DONAR");
+            ResultSetMetaData metaData = rs.getMetaData();
+            
+            int columnCount = metaData.getColumnCount();
+            System.out.println("DONAR Table Metadata:");
+            System.out.println("----------------------");
+            
+            for (int i = 1; i <= columnCount; i++) {
+                System.out.println("Column " + i + ":");
+                System.out.println("  Name: " + metaData.getColumnName(i));
+                System.out.println("  Type: " + metaData.getColumnTypeName(i));
+                System.out.println("  Size: " + metaData.getColumnDisplaySize(i));
+                System.out.println("  Nullable: " + (metaData.isNullable(i) == ResultSetMetaData.columnNullable ? "Yes" : "No"));
+                System.out.println();
+            }
+            
+            con.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+}

@@ -1,0 +1,111 @@
+import java.util.*;
+import java.io.*;
+
+public class LinkedListDemo {
+    public static void main(String args[]) throws Exception {
+        int n;
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        LinkedList<String> li = new LinkedList<>();
+        
+        System.out.println("\nEnter number of your friends:");
+        n = Integer.parseInt(br.readLine());  // Fixed Integer.parseInt()
+        
+        System.out.println("\nEnter your friends' names:");
+        for (int i = 1; i <= n; i++) {
+            li.add(br.readLine());
+        }
+        
+        System.out.println("\nLinked List content is:");
+        for (String name : li) {
+            System.out.println(name);
+        }
+    }
+}
+
+
+
+
+<%@ page import="java.util.*, java.text.SimpleDateFormat" %>
+<html>
+<head>
+    <title>Online Book Purchase</title>
+</head>
+<body>
+    <%
+        String username = (String) session.getAttribute("username");
+        if (username == null) {
+            username = request.getParameter("username");
+            if (username != null && !username.isEmpty()) {
+                session.setAttribute("username", username);
+            } else {
+    %>
+                <h2>Login to Continue</h2>
+                <form method="post">
+                    Enter Username: <input type="text" name="username" required><br><br>
+                    <input type="submit" value="Login">
+                </form>
+    <%
+                return;
+            }
+        }
+
+        String[] selectedBooks = request.getParameterValues("books");
+        List<String> cart = (List<String>) session.getAttribute("cart");
+        if (cart == null) {
+            cart = new ArrayList<>();
+        }
+
+        int pageTotal = 0;
+        if (selectedBooks != null) {
+            for (String book : selectedBooks) {
+                cart.add(book);
+                pageTotal += Integer.parseInt(book.split(",")[1]);
+            }
+        }
+
+        session.setAttribute("cart", cart);
+    %>
+
+    <h2>Welcome, <%= username %>! Select Books to Purchase</h2>
+    <form method="post">
+        <input type="checkbox" name="books" value="Book A,200"> Book A - ₹200<br>
+        <input type="checkbox" name="books" value="Book B,150"> Book B - ₹150<br>
+        <input type="checkbox" name="books" value="Book C,250"> Book C - ₹250<br>
+        <input type="checkbox" name="books" value="Book D,300"> Book D - ₹300<br><br>
+        <input type="submit" value="Add to Cart">
+    </form>
+
+    <h2>Your Shopping Cart</h2>
+    <table border="1">
+        <tr>
+            <th>Book Name</th>
+            <th>Price (₹)</th>
+        </tr>
+        <%
+            int totalBill = 0;
+            for (String book : cart) {
+                String[] bookDetails = book.split(",");
+                totalBill += Integer.parseInt(bookDetails[1]);
+        %>
+        <tr>
+            <td><%= bookDetails[0] %></td>
+            <td><%= bookDetails[1] %></td>
+        </tr>
+        <%
+            }
+        %>
+    </table>
+
+    <h3>Page Total: ₹<%= pageTotal %></h3>
+    <h3>Total Bill: ₹<%= totalBill %></h3>
+
+    <a href="?logout=true">Logout</a>
+
+    <%
+        if ("true".equals(request.getParameter("logout"))) {
+            session.invalidate();
+            response.sendRedirect(request.getRequestURI());
+        }
+    %>
+</body>
+</html>

@@ -1,0 +1,97 @@
+import java.util.*;
+
+class TreeSetDemo 
+{
+    public static void main(String args[]) 
+    {
+        TreeSet<String> ts = new TreeSet<>();
+
+        ts.add("Red");
+        ts.add("Yellow");
+        ts.add("Blue");
+        ts.add("Black");
+        ts.add("Orange");
+        ts.add("Green");
+
+        System.out.println("TreeSet is: " + ts);
+    }
+}
+
+
+
+
+
+CREATE TABLE CUSTOMER (
+    CustomerNo INT PRIMARY KEY,
+    CustomerName VARCHAR(50),
+    CustomerEmail VARCHAR(100),
+    CustomerPhone VARCHAR(15)
+);
+
+INSERT INTO CUSTOMER VALUES
+(101, 'John Doe', 'john@example.com', '9876543210'),
+(102, 'Jane Smith', 'jane@example.com', '9876501234'),
+(103, 'Michael Brown', 'michael@example.com', '9867543210');
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Search</title>
+</head>
+<body>
+    <h2>Search Customer</h2>
+    <form action="CustomerSearchServlet" method="post">
+        <label for="customerNo">Enter Customer Number:</label>
+        <input type="number" id="customerNo" name="customerNo" required>
+        <input type="submit" value="Search">
+    </form>
+</body>
+</html>
+
+
+
+
+import java.io.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+import java.sql.*;
+
+public class CustomerSearchServlet extends HttpServlet {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("text/html");
+        PrintWriter out = response.getWriter();
+
+        String customerNo = request.getParameter("customerNo");
+        if (customerNo == null || customerNo.isEmpty()) {
+            out.println("<h3>Please enter a valid customer number.</h3>");
+            return;
+        }
+
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/your_database", "your_username", "your_password");
+
+            PreparedStatement pst = con.prepareStatement("SELECT * FROM CUSTOMER WHERE CustomerNo = ?");
+            pst.setInt(1, Integer.parseInt(customerNo));
+            ResultSet rs = pst.executeQuery();
+
+            if (rs.next()) {
+                out.println("<h2>Customer Details</h2>");
+                out.println("<p><b>Customer No:</b> " + rs.getInt("CustomerNo") + "</p>");
+                out.println("<p><b>Name:</b> " + rs.getString("CustomerName") + "</p>");
+                out.println("<p><b>Email:</b> " + rs.getString("CustomerEmail") + "</p>");
+                out.println("<p><b>Phone:</b> " + rs.getString("CustomerPhone") + "</p>");
+            } else {
+                out.println("<h3>No customer found with Customer Number: " + customerNo + "</h3>");
+            }
+
+            con.close();
+        } catch (Exception e) {
+            out.println("<h3>Error: " + e.getMessage() + "</h3>");
+        }
+    }
+}

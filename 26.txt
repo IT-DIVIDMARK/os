@@ -1,0 +1,74 @@
+import java.util.*;
+import java.io.*;
+
+class SETB1 
+{
+    public static void main(String[] args) throws Exception 
+    {
+        int no, element, i;
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        TreeSet<Integer> ts = new TreeSet<>();
+
+        System.out.println("Enter the number of elements:");
+        no = Integer.parseInt(br.readLine());
+
+        for (i = 0; i < no; i++) 
+        {
+            System.out.println("Enter the element: ");
+            element = Integer.parseInt(br.readLine());
+            ts.add(element);
+        }
+
+        System.out.println("The elements in sorted order: " + ts);
+
+        System.out.println("Enter element to be searched: ");
+        element = Integer.parseInt(br.readLine());
+
+        if (ts.contains(element)) 
+        {
+            System.out.println("Element is found");
+        } 
+        else 
+        {
+            System.out.println("Element is NOT found");
+        }
+    }
+}
+
+
+
+import java.sql.*;
+
+public class DatabaseMetadataExample {
+    public static void main(String[] args) {
+        String url = "jdbc:mysql://localhost:3306/your_database";
+        String user = "your_username";
+        String password = "your_password";
+
+        try (Connection conn = DriverManager.getConnection(url, user, password)) {
+            DatabaseMetaData dbMetaData = conn.getMetaData();
+
+            System.out.println("Database Information:");
+            System.out.println("-------------------------------------------------");
+            System.out.println("Database Name        : " + dbMetaData.getDatabaseProductName());
+            System.out.println("Database Version     : " + dbMetaData.getDatabaseProductVersion());
+            System.out.println("Driver Name          : " + dbMetaData.getDriverName());
+            System.out.println("Driver Version       : " + dbMetaData.getDriverVersion());
+            System.out.println("User Name            : " + dbMetaData.getUserName());
+            System.out.println("-------------------------------------------------");
+
+            System.out.println("Tables in the Database:");
+            System.out.println("-------------------------------------------------");
+
+            try (ResultSet tables = dbMetaData.getTables(null, null, "%", new String[]{"TABLE"})) {
+                while (tables.next()) {
+                    System.out.println("Table Name: " + tables.getString("TABLE_NAME"));
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+}
+

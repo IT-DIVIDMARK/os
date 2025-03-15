@@ -1,0 +1,235 @@
+import java.util.*;
+
+class MyThread implements Runnable {
+    Thread t;
+    int no, sum = 0;
+    int a[];
+
+    MyThread(String s, int n) {
+        Random rs = new Random();
+        t = new Thread(this, s);
+        no = n;
+        a = new int[1000];
+        for (int i = 0; i < 1000; i++) {
+            a[i] = rs.nextInt(100);
+        }
+        t.start();
+    }
+
+    public void run() {
+        for (int i = no; i < no + 100; i++) {
+            sum += a[i];
+        }
+        System.out.println("Sum = " + sum);
+        System.out.println("Avg = " + (sum / 100.0));
+    }
+}
+
+public class ThreadDemo {
+    public static void main(String[] arg) throws InterruptedException {
+        MyThread t1 = new MyThread("g", 1);
+        t1.t.join();
+        MyThread t2 = new MyThread("r", 100);
+        t2.t.join();
+        MyThread t3 = new MyThread("s", 200);
+        t3.t.join();
+        MyThread t4 = new MyThread("t", 300);
+        t4.t.join();
+        MyThread t5 = new MyThread("p", 400);
+        t5.t.join();
+        MyThread t6 = new MyThread("q", 500);
+        t6.t.join();
+        MyThread t7 = new MyThread("x", 600);
+        t7.t.join();
+        MyThread t8 = new MyThread("y", 700);
+        t8.t.join();
+        MyThread t9 = new MyThread("z", 800);
+        t9.t.join();
+        MyThread t10 = new MyThread("w", 900);
+        t10.t.join();
+    }
+}
+
+
+
+
+CREATE TABLE MOBILE (
+    Model_Number INT PRIMARY KEY,
+    Model_Name VARCHAR(50),
+    Model_Color VARCHAR(30),
+    Sim_Type VARCHAR(20),
+    NetworkType VARCHAR(20),
+    BatteryCapacity INT,
+    InternalStorage INT,
+    RAM INT,
+    ProcessorType VARCHAR(50)
+);
+
+
+
+
+
+
+
+
+import java.sql.*;
+import java.util.Scanner;
+
+public class MobileDatabase {
+    static Connection con;
+    
+    public static void main(String[] args) {
+        try {
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/db", "user", "password");
+            Scanner sc = new Scanner(System.in);
+            
+            while (true) {
+                System.out.println("\n1. Insert\n2. Modify\n3. Delete\n4. Search\n5. View All\n6. Exit");
+                System.out.print("Enter your choice: ");
+                int choice = sc.nextInt();
+                
+                switch (choice) {
+                    case 1:
+                        insertMobile(sc);
+                        break;
+                    case 2:
+                        modifyMobile(sc);
+                        break;
+                    case 3:
+                        deleteMobile(sc);
+                        break;
+                    case 4:
+                        searchMobile(sc);
+                        break;
+                    case 5:
+                        viewAllMobiles();
+                        break;
+                    case 6:
+                        System.out.println("Exiting...");
+                        sc.close();
+                        con.close();
+                        System.exit(0);
+                    default:
+                        System.out.println("Invalid choice. Try again.");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    static void insertMobile(Scanner sc) throws SQLException {
+        System.out.print("Enter Model Number: ");
+        int modelNo = sc.nextInt();
+        sc.nextLine();
+        System.out.print("Enter Model Name: ");
+        String modelName = sc.nextLine();
+        System.out.print("Enter Model Color: ");
+        String modelColor = sc.nextLine();
+        System.out.print("Enter SIM Type: ");
+        String simType = sc.nextLine();
+        System.out.print("Enter Network Type: ");
+        String networkType = sc.nextLine();
+        System.out.print("Enter Battery Capacity: ");
+        int batteryCapacity = sc.nextInt();
+        System.out.print("Enter Internal Storage: ");
+        int storage = sc.nextInt();
+        System.out.print("Enter RAM: ");
+        int ram = sc.nextInt();
+        sc.nextLine();
+        System.out.print("Enter Processor Type: ");
+        String processor = sc.nextLine();
+
+        String query = "INSERT INTO MOBILE VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        PreparedStatement pst = con.prepareStatement(query);
+        pst.setInt(1, modelNo);
+        pst.setString(2, modelName);
+        pst.setString(3, modelColor);
+        pst.setString(4, simType);
+        pst.setString(5, networkType);
+        pst.setInt(6, batteryCapacity);
+        pst.setInt(7, storage);
+        pst.setInt(8, ram);
+        pst.setString(9, processor);
+        pst.executeUpdate();
+        System.out.println("Record Inserted Successfully!");
+    }
+
+    static void modifyMobile(Scanner sc) throws SQLException {
+        System.out.print("Enter Model Number to Update: ");
+        int modelNo = sc.nextInt();
+        sc.nextLine();
+        System.out.print("Enter New Model Name: ");
+        String modelName = sc.nextLine();
+
+        String query = "UPDATE MOBILE SET Model_Name = ? WHERE Model_Number = ?";
+        PreparedStatement pst = con.prepareStatement(query);
+        pst.setString(1, modelName);
+        pst.setInt(2, modelNo);
+        int rowsUpdated = pst.executeUpdate();
+        if (rowsUpdated > 0) {
+            System.out.println("Record Updated Successfully!");
+        } else {
+            System.out.println("No Record Found with Given Model Number!");
+        }
+    }
+
+    static void deleteMobile(Scanner sc) throws SQLException {
+        System.out.print("Enter Model Number to Delete: ");
+        int modelNo = sc.nextInt();
+
+        String query = "DELETE FROM MOBILE WHERE Model_Number = ?";
+        PreparedStatement pst = con.prepareStatement(query);
+        pst.setInt(1, modelNo);
+        int rowsDeleted = pst.executeUpdate();
+        if (rowsDeleted > 0) {
+            System.out.println("Record Deleted Successfully!");
+        } else {
+            System.out.println("No Record Found!");
+        }
+    }
+
+    static void searchMobile(Scanner sc) throws SQLException {
+        System.out.print("Enter Model Number to Search: ");
+        int modelNo = sc.nextInt();
+
+        String query = "SELECT * FROM MOBILE WHERE Model_Number = ?";
+        PreparedStatement pst = con.prepareStatement(query);
+        pst.setInt(1, modelNo);
+        ResultSet rs = pst.executeQuery();
+
+        if (rs.next()) {
+            System.out.println("Model Number: " + rs.getInt("Model_Number"));
+            System.out.println("Model Name: " + rs.getString("Model_Name"));
+            System.out.println("Model Color: " + rs.getString("Model_Color"));
+            System.out.println("SIM Type: " + rs.getString("Sim_Type"));
+            System.out.println("Network Type: " + rs.getString("NetworkType"));
+            System.out.println("Battery Capacity: " + rs.getInt("BatteryCapacity") + "mAh");
+            System.out.println("Internal Storage: " + rs.getInt("InternalStorage") + "GB");
+            System.out.println("RAM: " + rs.getInt("RAM") + "GB");
+            System.out.println("Processor Type: " + rs.getString("ProcessorType"));
+        } else {
+            System.out.println("No Record Found!");
+        }
+    }
+
+    static void viewAllMobiles() throws SQLException {
+        String query = "SELECT * FROM MOBILE";
+        Statement stmt = con.createStatement();
+        ResultSet rs = stmt.executeQuery(query);
+
+        System.out.println("\nMobile Table Data:");
+        while (rs.next()) {
+            System.out.println(rs.getInt("Model_Number") + " | " +
+                               rs.getString("Model_Name") + " | " +
+                               rs.getString("Model_Color") + " | " +
+                               rs.getString("Sim_Type") + " | " +
+                               rs.getString("NetworkType") + " | " +
+                               rs.getInt("BatteryCapacity") + "mAh | " +
+                               rs.getInt("InternalStorage") + "GB | " +
+                               rs.getInt("RAM") + "GB | " +
+                               rs.getString("ProcessorType"));
+        }
+    }
+}
+

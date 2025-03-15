@@ -1,0 +1,105 @@
+import java.util.*;
+import java.io.*;
+
+public class LinkedListDemo 
+{
+    public static void main(String args[]) throws Exception 
+    {
+        int n;
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        LinkedList<String> li = new LinkedList<>();
+
+        System.out.println("\nEnter number of your friends:");
+        n = Integer.parseInt(br.readLine());
+
+        System.out.println("\nEnter your friends' names:");
+        for (int i = 1; i <= n; i++) 
+        {
+            li.add(br.readLine());
+        }
+
+        System.out.println("\nLinked List content is: " + li);
+    }
+}
+
+
+
+CREATE TABLE patient (
+    PatientNo INT PRIMARY KEY,
+    PatientName VARCHAR(100),
+    PatientAddress VARCHAR(255),
+    PatientAge INT,
+    PatientDisease VARCHAR(100)
+);
+
+INSERT INTO patient VALUES 
+(1, 'John Doe', 'New York, USA', 45, 'Diabetes'),
+(2, 'Alice Smith', 'Los Angeles, USA', 30, 'Hypertension'),
+(3, 'Robert Brown', 'Chicago, USA', 60, 'Asthma');
+
+
+
+
+
+<%@ page import="java.sql.*" %>
+<html>
+<head>
+    <title>Patient Details</title>
+    <style>
+        table {
+            width: 70%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Patient Details</h2>
+
+<table>
+    <tr>
+        <th>Patient No</th>
+        <th>Patient Name</th>
+        <th>Patient Address</th>
+        <th>Patient Age</th>
+        <th>Patient Disease</th>
+    </tr>
+
+    <%
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/yourDatabase", "yourUsername", "yourPassword");
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM patient");
+
+            while (rs.next()) {
+    %>
+                <tr>
+                    <td><%= rs.getInt("PatientNo") %></td>
+                    <td><%= rs.getString("PatientName") %></td>
+                    <td><%= rs.getString("PatientAddress") %></td>
+                    <td><%= rs.getInt("PatientAge") %></td>
+                    <td><%= rs.getString("PatientDisease") %></td>
+                </tr>
+    <%
+            }
+            rs.close();
+            stmt.close();
+            conn.close();
+        } catch (Exception e) {
+            out.println("<tr><td colspan='5'>Error: " + e.getMessage() + "</td></tr>");
+        }
+    %>
+</table>
+
+</body>
+</html>
